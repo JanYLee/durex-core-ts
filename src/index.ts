@@ -1,10 +1,34 @@
-import './demo/es5'
-import './demo/es6'
-import './demo/es7'
-import './demo/es8'
-import './demo/es9'
-import './demo/es10'
+import model from './model'
+import { actions } from './actions'
+import hook from './hook'
+import defaults, { options, addMiddleware, addReducer } from './defaults'
+import { createStore } from './store'
+import { store as _store } from './middleware'
 
-export default function demo(): void {
-  console.log('demo')
+const getState = function () {
+  return _store.getState()
+}
+
+export default {
+  model,
+  actions,
+  hook,
+  defaults,
+  options,
+  addMiddleware,
+  addReducer,
+  getState,
+  createStore
+}
+
+export {
+  model,
+  actions,
+  hook,
+  defaults,
+  options,
+  addMiddleware,
+  addReducer,
+  getState,
+  createStore
 }

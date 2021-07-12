@@ -20,6 +20,10 @@
       "git add"
     ]
   },
+  "dependencies": {
+    "@gem-mine/immutable": "^1.0.0",
+    "redux": "^4.0.1"
+  },
   "devDependencies": {
     "@gem-mine/babel-preset-app": "^2.4.5",
     "@gem-mine/cli-plugin-eslint": "^3.2.4",
