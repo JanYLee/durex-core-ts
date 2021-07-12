@@ -1,0 +1,11 @@
+{
+  "version": "3.5.0",
+  "template_id": "sdk",
+  "name": "durex-core-ts",
+  "path": "G:\\githubProject\\reduxjs\\durex-core-ts",
+  "env": "{\"template_version\":\"2.16.3\",\"npm_version\":\"6.14.11\",\"node_version\":\"v12.21.0\"}",
+  "user": "'JanYLee'",
+  "email": "'694730359@qq.com'",
+  "choice": "{\"templateId\":\"sdk\",\"features\":[\"lintBeforeCommit\",\"ts\",\"jest\"]}",
+  "project_id": "5d4e07d0-e2f2-11eb-b8d9-231e733614cf_1626081614029"
+}

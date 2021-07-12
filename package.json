@@ -1,0 +1,37 @@
+{
+  "name": "durex-core-ts",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "gmsr build",
+    "dev": "gmsr build --watch",
+    "lint": "gmsr lint",
+    "lint:fix": "gmsr lint --fix",
+    "start": "gmsr dev",
+    "test:unit": "gmsr test:unit"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "@gem-mine/babel-preset-app": "^2.4.5",
+    "@gem-mine/cli-plugin-eslint": "^3.2.4",
+    "@gem-mine/cli-plugin-jest": "^1.6.1",
+    "@gem-mine/cli-plugin-typescript": "^2.7.0",
+    "@gem-mine/eslint-config-recommend-ts": "^3.1.9",
+    "@gem-mine/script-rollup": "^1.5.1",
+    "@types/jest": "^24.0.23",
+    "eslint": "^7.5.0",
+    "husky": "^2.7.0",
+    "jest": "^24.9.0",
+    "lint-staged": "^7.2.2",
+    "ts-jest": "^24.1.0"
+  }
+}
