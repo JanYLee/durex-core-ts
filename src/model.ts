@@ -1,42 +1,48 @@
 import { setIn } from '@gem-mine/immutable'
 
 import { resolveReducers, addActions } from './actions'
+import isObject from './utils'
 
-export const models = []
+export interface ModelObject {
+  name?: string
+  state?: any
+  reducers?: any
+  effects?: any
+}
 
-export default function model(m) {
-  m = validateModel(m)
+export const models: ModelObject[] = []
+
+export default function model(modelObj: ModelObject) {
+  const m = validateModel(modelObj)
   if (!m.reducers) {
     m.reducers = {}
   }
   // 为所有 model 的 reducer 注入 setField 方法，这样 可以使用 actions[name].setField
-  m.reducers.setField = function (data, getState) {
+  m.reducers.setField = function setField(data) {
     return setIn(this.getState(), data)
   }
   // 为所有 model 的 reducer 注入 resetState 方法，这样 可以使用 actions[name].resetState
-  m.reducers.resetState = function () {
+  m.reducers.resetState = function resetState() {
     return setIn(this.getState(), m.state)
   }
 
   const reducer = getReducer(resolveReducers(m.name, m.reducers), m.state)
 
-  const _model = {
+  const durexModel = {
     name: m.name,
     reducer
   }
 
-  models.push(_model)
+  models.push(durexModel)
 
   // 挂到 actions 和 effects
   addActions(m.name, m.reducers, m.effects)
 
-  return _model
+  return durexModel
 }
 
-function validateModel(m = {}) {
+function validateModel(m: ModelObject): ModelObject {
   const { name, reducers, effects } = m
-
-  const isObject = (target) => Object.prototype.toString.call(target) === '[object Object]'
 
   if (!name || typeof name !== 'string') {
     throw new Error('Model name must be a valid string!')

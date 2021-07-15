@@ -1,4 +1,4 @@
-export const hooks = []
+export const hooks: any[] = []
 
 export default function hook(subscriber) {
   if (typeof subscriber !== 'function') {

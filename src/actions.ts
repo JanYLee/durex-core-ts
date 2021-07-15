@@ -1,5 +1,5 @@
 import { setIn } from '@gem-mine/immutable'
-import { dispatch, getState } from './middleware'
+import { store } from './middleware'
 import { options } from './defaults'
 
 const SEP = '/'
@@ -26,7 +26,7 @@ export function addActions(modelName, reducers = {}, effects = {}) {
   const scope = {
     actions: actions[modelName],
     setField: (data) => scope.actions.setField(data),
-    getState: () => getState()[modelName]
+    getState: () => store.getState()[modelName]
   }
 
   each(effects, (effectName) => {
@@ -52,11 +52,11 @@ export function addActions(modelName, reducers = {}, effects = {}) {
  */
 export function resolveReducers(modelName, reducers = {}) {
   return Object.keys(reducers).reduce((acc, cur) => {
-    acc[`${modelName}${SEP}${cur}`] = function (state, data) {
+    acc[`${modelName}${SEP}${cur}`] = function reducer(state, data) {
       return reducers[cur].bind({
-        setField: (data) => setIn(state, data),
+        setField: (d) => setIn(state, d),
         getState: () => state
-      })(data, getState)
+      })(data, store.getState)
     }
 
     return acc
@@ -74,7 +74,7 @@ function each(obj, callback) {
  * @param {String} actionName action name，是 model 中 reduces 或者 effects 的 key
  */
 function actionCreator(modelName, actionName) {
-  return function (data) {
-    return dispatch({ type: `${modelName}${SEP}${actionName}`, data })
+  return function action(data) {
+    return store.dispatch({ type: `${modelName}${SEP}${actionName}`, data })
   }
 }

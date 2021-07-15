@@ -4,13 +4,14 @@ import {
   combineReducers,
   compose,
 } from 'redux'
+import type { StoreEnhancer } from 'redux'
 import { options } from './defaults'
 import { models } from './model'
 import createMiddleware from './middleware'
 
-export let store
+let store
 
-export function createStore() {
+export default function createStore() {
   const { initialState, middlewares, reducers } = options
 
   const middleware = applyMiddleware(...middlewares, createMiddleware())
@@ -27,12 +28,12 @@ export function createStore() {
   const reducer = createReducer(models, reducers)
   const enhancer = composeEnhancers(...enhancers)
 
-  store = _createStore(reducer, initialState, enhancer)
+  store = _createStore(reducer, initialState, enhancer as StoreEnhancer<any, {}>)
   return store
 }
 
-function createReducer(models, reducers) {
-  const modelReducers = models.reduce((acc, cur) => {
+function createReducer(ms, reducers) {
+  const modelReducers = ms.reduce((acc, cur) => {
     acc[cur.name] = cur.reducer
     return acc
   }, {})

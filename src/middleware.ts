@@ -1,27 +1,30 @@
+import type { Dispatch } from 'redux'
+
 import { effects } from './effects'
 import { hooks } from './hook'
 
-function warning() {
+function warning(): never {
   throw new Error(
     'You are calling "dispatch" or "getState" without applying middleware! '
       + 'Please create your store with middleware first!'
   )
 }
 
-export let dispatch = warning
+interface Store {
+  dispatch: Dispatch | typeof warning
+  getState: any
+}
 
-export let getState = warning
-
-export const store = {
-  dispatch,
-  getState
+export const store: Store = {
+  dispatch: warning,
+  getState: warning
 }
 
 // 只在 store.js 中被使用
 export default function createMiddleware() {
   return (middlewareAPI) => {
-    store.dispatch = dispatch = middlewareAPI.dispatch
-    store.getState = getState = middlewareAPI.getState
+    store.dispatch = middlewareAPI.dispatch
+    store.getState = middlewareAPI.getState
 
     return (next) => (action) => {
       let effectResult
@@ -30,10 +33,10 @@ export default function createMiddleware() {
 
       // 处理 effects
       if (typeof effects[action.type] === 'function') {
-        effectResult = effects[action.type](action.data, getState)
+        effectResult = effects[action.type](action.data, store.getState)
       }
 
-      hooks.forEach((hook) => hook(action, getState))
+      hooks.forEach((hook) => hook(action, store.getState))
 
       return effectResult || result
     }

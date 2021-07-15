@@ -1,6 +1,21 @@
-import { effects, addEffect } from './effects'
+import type { ReducersMapObject, Middleware } from 'redux'
+import { effects, addEffect as defaultAddEffect } from './effects'
+import isObject from './utils'
 
-export const options = {
+export interface Options {
+  middlewares: Middleware[]
+  reducers: ReducersMapObject
+  addEffect: (name: string, handler) => void
+  initialState?: any
+}
+
+export interface DefaultOptions {
+  middlewares: any[]
+  reducers: ReducersMapObject
+  addEffect: any
+}
+
+export const options: Options = {
   // global initial state
   // state: undefined,
 
@@ -17,10 +32,8 @@ export const options = {
   reducers: {},
 
   // An overwrite of the existing effect handler
-  addEffect: addEffect(effects)
+  addEffect: defaultAddEffect(effects)
 }
-
-const isObject = (target) => Object.prototype.toString.call(target) === '[object Object]'
 
 export function addReducer(reducer) {
   Object.assign(options.reducers, reducer)
@@ -30,7 +43,7 @@ export function addMiddleware(middleware) {
   options.middlewares.push(middleware)
 }
 
-export default function defaults(opts = {}) {
+export default function defaults(opts: DefaultOptions): void {
   const { middlewares, reducers, addEffect } = opts
 
   if (middlewares && !Array.isArray(middlewares)) {
