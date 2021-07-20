@@ -1,11 +1,14 @@
 import { setIn } from '@gem-mine/immutable'
 
 import { resolveReducers, addActions } from './actions'
-import isObject from './utils'
+import { isObject } from './utils'
 
-export interface ModelObject {
-  name?: string
-  state?: any
+export interface ModelObject<
+  Name extends string = string,
+  State = any,
+> {
+  name: Name
+  state?: State
   reducers?: any
   effects?: any
 }
@@ -41,7 +44,7 @@ export default function model(modelObj: ModelObject) {
   return durexModel
 }
 
-function validateModel(m: ModelObject): ModelObject {
+function validateModel<T extends ModelObject>(m: T): T {
   const { name, reducers, effects } = m
 
   if (!name || typeof name !== 'string') {

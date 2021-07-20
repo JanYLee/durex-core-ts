@@ -20,7 +20,7 @@ export default function createStore() {
 
   if (process.env.NODE_ENV !== 'production') {
     // Redux devtools extension support.
-    if (global.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+    if (global?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
       composeEnhancers = global.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     }
   }

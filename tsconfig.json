@@ -20,7 +20,7 @@
     "typeRoots": [
       "./node_modules/@types",
       "./node_modules/@gem-mine/cli-plugin-typescript/@types",
-      "./src/@types"
+      "src/@types"
     ]
   },
   "include": [

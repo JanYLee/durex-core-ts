@@ -1,6 +1,6 @@
-import type { ReducersMapObject, Middleware } from 'redux'
+import type { ReducersMapObject, Middleware, Reducer } from 'redux'
 import { effects, addEffect as defaultAddEffect } from './effects'
-import isObject from './utils'
+import { isObject, each } from './utils'
 
 export interface Options {
   middlewares: Middleware[]
@@ -35,15 +35,15 @@ export const options: Options = {
   addEffect: defaultAddEffect(effects)
 }
 
-export function addReducer(reducer) {
+export function addReducer(reducer: Reducer) {
   Object.assign(options.reducers, reducer)
 }
 
-export function addMiddleware(middleware) {
+export function addMiddleware(middleware: Middleware) {
   options.middlewares.push(middleware)
 }
 
-export default function defaults(opts: DefaultOptions): void {
+export default function defaults(opts: DefaultOptions) {
   const { middlewares, reducers, addEffect } = opts
 
   if (middlewares && !Array.isArray(middlewares)) {
@@ -63,7 +63,7 @@ export default function defaults(opts: DefaultOptions): void {
     }
   }
 
-  Object.keys(opts).forEach((key) => {
+  each(opts, (key) => {
     if (key === 'reducers') {
       options[key] = {
         ...options[key],
