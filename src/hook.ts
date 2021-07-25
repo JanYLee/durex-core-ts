@@ -1,6 +1,8 @@
-export const hooks: any[] = []
+import type { Subscriber, Hook } from './@types/hook'
 
-export default function hook(subscriber) {
+export const hooks: Subscriber[] = []
+
+export const hook: Hook = (subscriber) => {
   if (typeof subscriber !== 'function') {
     throw new Error('Invalid hook, must be a function!')
   }

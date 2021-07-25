@@ -1,21 +1,14 @@
 import { setIn } from '@gem-mine/immutable'
+import { Reducer, ReducersMapObject } from 'redux'
 
 import { resolveReducers, addActions } from './actions'
 import { isObject } from './utils'
 
-export interface ModelObject<
-  Name extends string = string,
-  State = any,
-> {
-  name: Name
-  state?: State
-  reducers?: any
-  effects?: any
-}
+import type { Model, DurexModel } from './@types/model'
 
-export const models: ModelObject[] = []
+export const models: DurexModel[] = []
 
-export default function model(modelObj: ModelObject) {
+export default function model(modelObj: Model): DurexModel {
   const m = validateModel(modelObj)
   if (!m.reducers) {
     m.reducers = {}
@@ -31,7 +24,7 @@ export default function model(modelObj: ModelObject) {
 
   const reducer = getReducer(resolveReducers(m.name, m.reducers), m.state)
 
-  const durexModel = {
+  const durexModel: DurexModel = {
     name: m.name,
     reducer
   }
@@ -44,7 +37,7 @@ export default function model(modelObj: ModelObject) {
   return durexModel
 }
 
-function validateModel<T extends ModelObject>(m: T): T {
+function validateModel<T extends Model>(m: T): T {
   const { name, reducers, effects } = m
 
   if (!name || typeof name !== 'string') {
@@ -63,8 +56,8 @@ function validateModel<T extends ModelObject>(m: T): T {
     throw new Error('Model effects must be a valid object!')
   }
 
-  m.reducers = filterReducers(reducers)
-  m.effects = filterReducers(effects)
+  m.reducers = filterReducers(reducers!)
+  m.effects = filterReducers(effects!)
 
   return m
 }
@@ -75,7 +68,7 @@ function validateModel<T extends ModelObject>(m: T): T {
  * @param {Object} initialState
  */
 // If initialState is not specified, then set it to null
-function getReducer(reducers, initialState = null) {
+function getReducer(reducers: ReducersMapObject, initialState: any = null): Reducer {
   return (state = initialState, action) => {
     if (typeof reducers[action.type] === 'function') {
       return reducers[action.type](state, action.data)
@@ -88,7 +81,7 @@ function getReducer(reducers, initialState = null) {
  * 过滤 reducers 或 effects，去掉值非 function 的
  * @param {Object} reducers
  */
-function filterReducers(reducers) {
+function filterReducers(reducers: ReducersMapObject): ReducersMapObject {
   if (!reducers) {
     return reducers
   }

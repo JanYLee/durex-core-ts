@@ -1,10 +1,10 @@
 import { setIn } from '@gem-mine/immutable'
-import { Reducer, ReducersMapObject } from 'redux'
+import { ReducersMapObject } from 'redux'
 
 import { store } from './middleware'
 import { options } from './defaults'
 import { each } from './utils'
-import { Actions, ActionCreator } from './@types/actions'
+import type { Actions, ActionCreator } from './@types/actions'
 
 const SEP = '/'
 
@@ -18,9 +18,13 @@ export const actions: Actions = {}
  * @param {String} modelName 命名空间，是 model 的 name 字段
  * @param {String} actionName action name，是 model 中 reduces 或者 effects 的 key
  */
-const actionCreator = (modelName: string, actionName: string) => (data: any) => store.dispatch({ type: `${modelName}${SEP}${actionName}`, data })
+const actionCreator: ActionCreator = (modelName, actionName) => (data) => store.dispatch({ type: `${modelName}${SEP}${actionName}`, data })
 
-export function addActions(modelName: string, reducers = {}, effects = {}) {
+export function addActions(
+  modelName: string,
+  reducers: ReducersMapObject = {},
+  effects: ReducersMapObject = {}
+): void {
   // 在 actions 中挂载命名空间
   if (Object.keys(reducers).length || Object.keys(effects).length) {
     actions[modelName] = actions[modelName] || {}
@@ -62,7 +66,10 @@ export function addActions(modelName: string, reducers = {}, effects = {}) {
  * @param {String} modelName
  * @param {Object<String, function>} reducers
  */
-export function resolveReducers(modelName, reducers = {}) {
+export function resolveReducers(
+  modelName: string,
+  reducers: ReducersMapObject = {}
+): ReducersMapObject {
   return Object.keys(reducers).reduce((acc, cur) => {
     acc[`${modelName}${SEP}${cur}`] = function reducer(state, data) {
       return reducers[cur].bind({

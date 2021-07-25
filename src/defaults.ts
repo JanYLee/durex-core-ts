@@ -1,19 +1,8 @@
-import type { ReducersMapObject, Middleware, Reducer } from 'redux'
+import type { Middleware, Reducer } from 'redux'
 import { effects, addEffect as defaultAddEffect } from './effects'
 import { isObject, each } from './utils'
 
-export interface Options {
-  middlewares: Middleware[]
-  reducers: ReducersMapObject
-  addEffect: (name: string, handler) => void
-  initialState?: any
-}
-
-export interface DefaultOptions {
-  middlewares: any[]
-  reducers: ReducersMapObject
-  addEffect: any
-}
+import type { DefaultOptions, Options } from './@types/default'
 
 export const options: Options = {
   // global initial state
@@ -35,15 +24,15 @@ export const options: Options = {
   addEffect: defaultAddEffect(effects)
 }
 
-export function addReducer(reducer: Reducer) {
+export function addReducer(reducer: Reducer): void {
   Object.assign(options.reducers, reducer)
 }
 
-export function addMiddleware(middleware: Middleware) {
+export function addMiddleware(middleware: Middleware): void {
   options.middlewares.push(middleware)
 }
 
-export default function defaults(opts: DefaultOptions) {
+export default function defaults(opts: DefaultOptions): void {
   const { middlewares, reducers, addEffect } = opts
 
   if (middlewares && !Array.isArray(middlewares)) {

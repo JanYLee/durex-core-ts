@@ -1,6 +1,6 @@
 import model from './model'
 import { actions } from './actions'
-import hook from './hook'
+import { hook } from './hook'
 import defaults, { options, addMiddleware, addReducer } from './defaults'
 import createStore from './store'
 import { store } from './middleware'

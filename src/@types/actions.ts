@@ -1,10 +1,8 @@
-import type { Dispatch } from 'redux'
+import type { AnyAction } from 'redux'
 
 export interface Actions {
-  [modelName: string]: {
-    [name: string]: (data?: any) => void
-  }
+  [propName: string]: any
 }
 
 export type ActionCreator = (modelName: string, actionName: string) =>
-(data: any) => Dispatch
+(data: any) => AnyAction
