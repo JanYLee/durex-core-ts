@@ -8,9 +8,9 @@ interface AddEffect {
 export interface DefaultOptions {
   initialState?: {} | undefined
   historyMode?: string | undefined
-  middlewares: Middleware[]
-  reducers: ReducersMapObject
-  addEffect: AddEffect
+  middlewares?: Middleware[]
+  reducers?: ReducersMapObject
+  addEffect?: AddEffect
 }
 
 export interface Options {

@@ -16,6 +16,9 @@ import createMiddleware from './middleware'
 
 import { DurexModel } from './@types/model'
 
+// eslint-disable-next-line import/no-mutable-exports
+let store: Store
+
 export default function createStore(): Store {
   const { initialState, middlewares, reducers } = options
 
@@ -33,10 +36,11 @@ export default function createStore(): Store {
   const reducer = createReducer(models, reducers)
   const enhancer = composeEnhancers(...enhancers) as StoreEnhancer<any, {}>
 
-  return _createStore(reducer, initialState, enhancer)
+  store = _createStore(reducer, initialState, enhancer)
+  return store
 }
 
-export const store: Store = createStore()
+export { store }
 
 function createReducer(ms: DurexModel[], reducers: ReducersMapObject): Reducer {
   const modelReducers: ReducersMapObject = ms.reduce((acc, cur) => {
