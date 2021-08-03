@@ -70,17 +70,20 @@ describe('global actions', () => {
 
     defaults({
       reducers: {
-        add(state, data) {
-          return state + data
-        },
-        minus(state, data: any) {
-          return state - (data as number)
+        app3: {
+          add(state, data) {
+            return state + data
+          },
+          minus(state, data: any) {
+            return state - (data as number)
+          }
         }
       }
     })
 
     const store = createStore()
-
+    console.dir('-------')
+    console.dir(store, actions)
     actions.app3.add(1)
     expect(store.getState().app3).toEqual(1)
 

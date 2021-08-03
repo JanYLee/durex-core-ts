@@ -1,18 +1,17 @@
 // Test for global exported store object
-import { store as _store, createStore } from 'store'
+import createStore, { store as _store } from '../src/store'
 
 beforeEach(() => {
   jest.resetModules()
 })
 
 describe('create store', () => {
-
   it('should create a redux store', () => {
-    const mirror = require('index')
+    const mirror = require('../src/index')
 
     const model = mirror.model({
       name: 'app',
-      initialState: {
+      state: {
         count: 0
       },
       reducers: {
@@ -22,7 +21,7 @@ describe('create store', () => {
       }
     })
 
-    const store = createStore([model])
+    const store = createStore()
 
     expect(store).toBeDefined()
     expect(store.getState).toBeInstanceOf(Function)
@@ -30,7 +29,7 @@ describe('create store', () => {
   })
 
   it('exported store should be the created store', () => {
-    const mirror = require('index')
+    const mirror = require('../src/index')
 
     const model = mirror.model({
       name: 'app',
@@ -41,13 +40,13 @@ describe('create store', () => {
       }
     })
 
-    const store = createStore([model])
+    const store = createStore()
 
     expect(_store).toBe(store)
   })
 
   it('initialState should be null if not specified', () => {
-    const mirror = require('index')
+    const mirror = require('../src/index')
 
     const model = mirror.model({
       name: 'app',
@@ -58,13 +57,13 @@ describe('create store', () => {
       }
     })
 
-    const store = createStore([model])
+    const store = createStore()
 
     expect(store.getState().app).toEqual(null)
   })
 
   it('should update redux store by raw dispatch', () => {
-    const mirror = require('index')
+    const mirror = require('../src/index')
 
     const model = mirror.model({
       name: 'app',
@@ -78,7 +77,7 @@ describe('create store', () => {
       }
     })
 
-    const store = createStore([model])
+    const store = createStore()
 
     store.dispatch({
       type: 'app/add',
@@ -87,5 +86,4 @@ describe('create store', () => {
 
     expect(store.getState().app).toEqual({ count: 1 })
   })
-
 })

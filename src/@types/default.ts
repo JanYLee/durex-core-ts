@@ -9,13 +9,13 @@ export interface DefaultOptions {
   initialState?: {} | undefined
   historyMode?: string | undefined
   middlewares?: Middleware[]
-  reducers?: ReducersMapObject
-  addEffect?: AddEffect
+  reducers?: any
+  addEffect?: any
 }
 
 export interface Options {
   middlewares: Middleware[]
-  reducers: ReducersMapObject
+  reducers: any
   addEffect: (name: string, handler) => void
   initialState?: any
 }

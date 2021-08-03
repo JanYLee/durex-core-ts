@@ -1,14 +1,10 @@
-import React from 'react'
-import defaults, { options } from 'defaults'
-import { render } from 'index'
-import { store } from 'store'
+import defaults, { options } from '../src/defaults'
 
 beforeEach(() => {
   jest.resetModules()
 })
 
-describe('mirror.defaults', () => {
-
+describe('durex-core.defaults', () => {
   it('options should be exported', () => {
     expect(options).toBeDefined()
   })
@@ -19,24 +15,10 @@ describe('mirror.defaults', () => {
     }).not.toThrow()
   })
 
-  it('throws if historyMode is invalid', () => {
-    expect(() => {
-      defaults({
-        historyMode: 'unknown'
-      })
-    }).toThrow(/invalid/)
-
-    expect(() => {
-      defaults({
-        historyMode: 'hash'
-      })
-    }).not.toThrow()
-  })
-
   it('throws if middlewares is not array', () => {
     expect(() => {
       defaults({
-        middlewares: () => {}
+        middlewares: (() => { }) as unknown as []
       })
     }).toThrow(/invalid/)
 
@@ -60,40 +42,4 @@ describe('mirror.defaults', () => {
       })
     }).not.toThrow()
   })
-
-  it('should update `options.reducers` if call defaults multiple times', () => {
-    defaults({
-      reducers: {
-        a: () => 'a'
-      }
-    })
-    expect(Object.keys(options.reducers)).toEqual(['a'])
-
-    const container = document.createElement('div')
-    render(<div/>, container)
-    expect(store.getState().a).toBe('a')
-
-    defaults({
-      reducers: {
-        b: () => 'b'
-      }
-    })
-    expect(Object.keys(options.reducers)).toEqual(['a', 'b'])
-
-    render()
-    expect(store.getState().b).toBe('b')
-
-  })
-
-  it('should ignore un-provided values for second and after calls', () => {
-    defaults({
-      reducers: {},
-      historyMode: 'hash'
-    })
-    expect(options.historyMode).toBe('hash')
-
-    defaults({})
-    expect(options.historyMode).toBe('hash')
-  })
-
 })

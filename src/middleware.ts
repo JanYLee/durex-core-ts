@@ -15,17 +15,29 @@ const warning: Warning = () => {
       + 'Please create your store with middleware first!'
   )
 }
+// eslint-disable-next-line import/no-mutable-exports
+let dispatch: any = warning
+
+// eslint-disable-next-line import/no-mutable-exports
+let getState: any = warning
+
+export {
+  dispatch,
+  getState
+}
 
 export const store: Store = {
-  dispatch: warning,
-  getState: warning
+  dispatch,
+  getState
 }
 
 // 只在 store.js 中被使用
 export default function createMiddleware(): Middleware {
   return (middlewareAPI: MiddlewareAPI) => {
-    store.dispatch = middlewareAPI.dispatch
-    store.getState = middlewareAPI.getState
+    // eslint-disable-next-line no-multi-assign
+    store.dispatch = dispatch = middlewareAPI.dispatch
+    // eslint-disable-next-line no-multi-assign
+    store.getState = getState = middlewareAPI.getState
 
     return (next: Dispatch) => (action) => {
       let effectResult

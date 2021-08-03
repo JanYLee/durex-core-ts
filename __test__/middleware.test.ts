@@ -1,15 +1,13 @@
 import { createStore, applyMiddleware } from 'redux'
-import createMiddleware, { dispatch } from 'middleware'
-import { effects, addEffect } from 'effects'
+import createMiddleware, { dispatch } from '../src/middleware'
+import { effects, addEffect } from '../src/effects'
 
 describe('the middleware', () => {
-
   it('should export dispatch and call effect function when dispatch effect', () => {
-
     const fn = jest.fn()
 
     const reducer = (state = 0, action) => {
-      switch(action.type) {
+      switch (action.type) {
         case 'add':
           return state + action.data
         default:

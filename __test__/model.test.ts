@@ -2,63 +2,61 @@ beforeEach(() => {
   jest.resetModules()
 })
 
-
-describe('mirror.model', () => {
-
+describe('durexModel.model', () => {
   it('throws if model name is invalid', () => {
-    const mirror = require('index')
+    const durexModel = require('../src/index')
     const errorReg = /Model name must be a valid string/
 
     expect(() => {
-      mirror.model()
+      durexModel.model()
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 1
       })
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'routing'
       })
     }).toThrow(/it is used by react-router-redux/)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app'
       })
     }).not.toThrow()
   })
 
   it('throws if model name is duplicated', () => {
-    const mirror = require('index')
+    const durexModel = require('../src/index')
 
-    mirror.model({
+    durexModel.model({
       name: 'app'
     })
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app'
       })
     }).toThrow(/please select another name/)
   })
 
   it('models should be an array', () => {
-    const mirror = require('index')
-    const { models } = require('model')
+    const durexModel = require('../src/index')
+    const { models } = require('../src/model')
 
     expect(models).toBeInstanceOf(Array)
 
-    const model1 = mirror.model({
+    const model1 = durexModel.model({
       name: 'model1'
     })
 
     expect(models).toEqual([model1])
 
-    const model2 = mirror.model({
+    const model2 = durexModel.model({
       name: 'model2'
     })
 
@@ -66,32 +64,32 @@ describe('mirror.model', () => {
   })
 
   it('throws if reducers is invalid', () => {
-    const mirror = require('index')
+    const durexModel = require('../src/index')
     const errorReg = /Model reducers must be a valid object/
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         reducers: false
       })
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         reducers: []
       })
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         reducers: () => {}
       })
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         reducers: {}
       }).not.toThrow()
@@ -99,32 +97,32 @@ describe('mirror.model', () => {
   })
 
   it('throws if effects is invalid', () => {
-    const mirror = require('index')
+    const durexModel = require('../src/index')
     const errorReg = /Model effects must be a valid object/
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         effects: false
       })
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         effects: []
       })
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         effects: () => {}
       })
     }).toThrow(errorReg)
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         reducers: {}
       }).not.toThrow()
@@ -132,30 +130,30 @@ describe('mirror.model', () => {
   })
 
   it('do not add actions if reducers and effects are empty', () => {
-    const mirror = require('index')
-    const { actions } = mirror
+    const durexModel = require('../src/index')
+    const { actions } = durexModel
 
-    mirror.model({
+    durexModel.model({
       name: 'model1'
     })
 
     expect(actions).toEqual({})
 
-    mirror.model({
+    durexModel.model({
       name: 'model2',
       reducers: {}
     })
 
     expect(actions).toEqual({})
 
-    mirror.model({
+    durexModel.model({
       name: 'model3',
       effects: {}
     })
 
     expect(actions).toEqual({})
 
-    mirror.model({
+    durexModel.model({
       name: 'model4',
       effects: {},
       reducers: {}
@@ -165,7 +163,7 @@ describe('mirror.model', () => {
   })
 
   it('throws if effect name is duplicated with action name', () => {
-    const mirror = require('index')
+    const mirror = require('../src/index')
 
     expect(() => {
       mirror.model({
@@ -183,7 +181,7 @@ describe('mirror.model', () => {
   })
 
   it('should ignore non-function entries in reducers and effects', () => {
-    const mirror = require('index')
+    const mirror = require('../src/index')
     const { actions } = mirror
 
     const fn = () => {}

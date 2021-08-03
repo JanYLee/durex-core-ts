@@ -32,7 +32,11 @@ export function addMiddleware(middleware: Middleware): void {
   options.middlewares.push(middleware)
 }
 
-export default function defaults(opts: DefaultOptions): void {
+export default function defaults(opts?: DefaultOptions): void {
+  if (!opts) {
+    return
+  }
+
   const { middlewares, reducers, addEffect } = opts
 
   if (middlewares && !Array.isArray(middlewares)) {

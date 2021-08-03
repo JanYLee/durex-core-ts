@@ -3,44 +3,42 @@ beforeEach(() => {
 })
 
 describe('the hook method', () => {
-
   it('hooks should be an array', () => {
-    const { hooks } = require('hook')
+    const { hooks } = require('../src/hook')
 
     expect(hooks).toEqual([])
   })
 
   it('throws if hook is not function', () => {
-    const mirror = require('index')
+    const durexModel = require('../src/index')
 
     expect(() => {
-      mirror.hook(1)
+      durexModel.hook(1)
     }).toThrow(/must be a function/)
 
     expect(() => {
-      mirror.hook(noop => noop)
+      durexModel.hook((noop) => noop)
     }).not.toThrow()
   })
 
-  it('mirror.hook should add hook', () => {
-    const mirror = require('index')
-    const { hooks } = require('hook')
+  it('durexModel.hook should add hook', () => {
+    const durexModel = require('../src/index')
+    const { hooks } = require('../src/hook')
 
     const fn = jest.fn()
 
-    mirror.hook(fn)
+    durexModel.hook(fn)
 
     expect(hooks).toEqual([fn])
   })
 
   it('dispatch action should call hook', () => {
-    const mirror = require('index')
-    const { createStore } = require('store')
-    const { actions } = mirror
+    const durexModel = require('../src/index')
+    const { actions } = durexModel
 
     const fn = jest.fn()
 
-    const model = mirror.model({
+    durexModel.model({
       name: 'app',
       initialState: 0,
       reducers: {
@@ -49,13 +47,12 @@ describe('the hook method', () => {
         }
       },
       effects: {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         async myEffect() {}
       }
     })
 
-    createStore([model])
-
-    mirror.hook(fn)
+    durexModel.hook(fn)
 
     expect(fn).not.toBeCalled()
 
@@ -65,29 +62,27 @@ describe('the hook method', () => {
   })
 
   it('call function returned by hook should remove hook', () => {
-    const mirror = require('index')
-    const { createStore } = require('store')
-    const { actions } = mirror
+    const durexModel = require('../src/index')
+    const { actions } = durexModel
 
-    let log = []
+    const log: string[] = []
     let state
 
-    const model = mirror.model({
+    durexModel.model({
       name: 'app',
       initialState: 0,
       reducers: {
-        add(state, data) {
-          return state + data
+        add(_state, data) {
+          return _state + data
         }
       },
       effects: {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         async myEffect() {}
       }
     })
 
-    createStore([model])
-
-    const unhook = mirror.hook((action, getState) => {
+    const unhook = durexModel.hook((action, getState) => {
       if (action.type === 'app/add') {
         log.push('add')
       }
