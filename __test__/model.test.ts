@@ -3,7 +3,7 @@ beforeEach(() => {
 })
 
 describe('durexModel.model', () => {
-  it('throws if model name is invalid', () => {
+  it('throws if model and model name is invalid', () => {
     const durexModel = require('../src/index')
     const errorReg = /Model name must be a valid string/
 
@@ -16,12 +16,6 @@ describe('durexModel.model', () => {
         name: 1
       })
     }).toThrow(errorReg)
-
-    expect(() => {
-      durexModel.model({
-        name: 'routing'
-      })
-    }).toThrow(/it is used by react-router-redux/)
 
     expect(() => {
       durexModel.model({
@@ -129,44 +123,11 @@ describe('durexModel.model', () => {
     })
   })
 
-  it('do not add actions if reducers and effects are empty', () => {
-    const durexModel = require('../src/index')
-    const { actions } = durexModel
-
-    durexModel.model({
-      name: 'model1'
-    })
-
-    expect(actions).toEqual({})
-
-    durexModel.model({
-      name: 'model2',
-      reducers: {}
-    })
-
-    expect(actions).toEqual({})
-
-    durexModel.model({
-      name: 'model3',
-      effects: {}
-    })
-
-    expect(actions).toEqual({})
-
-    durexModel.model({
-      name: 'model4',
-      effects: {},
-      reducers: {}
-    })
-
-    expect(actions).toEqual({})
-  })
-
   it('throws if effect name is duplicated with action name', () => {
-    const mirror = require('../src/index')
+    const durexModel = require('../src/index')
 
     expect(() => {
-      mirror.model({
+      durexModel.model({
         name: 'app',
         reducers: {
           add(state, data) {
@@ -174,49 +135,10 @@ describe('durexModel.model', () => {
           }
         },
         effects: {
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           async add() {}
         }
       })
     }).toThrow(/Please select another name as effect name/)
-  })
-
-  it('should ignore non-function entries in reducers and effects', () => {
-    const mirror = require('../src/index')
-    const { actions } = mirror
-
-    const fn = () => {}
-
-    mirror.model({
-      name: 'model1',
-      reducers: {
-        a: 1
-      }
-    })
-
-    expect(actions).toEqual({})
-
-    mirror.model({
-      name: 'model2',
-      effects: {
-        b: 'b'
-      }
-    })
-
-    expect(actions).toEqual({})
-
-    mirror.model({
-      name: 'model3',
-      reducers: {
-        a: 1,
-        add: fn
-      },
-      effects: {
-        b: 'b',
-        plus: fn
-      }
-    })
-
-    expect(actions.model3).toBeInstanceOf(Object)
-    expect(Object.keys(actions.model3)).toEqual(['add', 'plus'])
   })
 })

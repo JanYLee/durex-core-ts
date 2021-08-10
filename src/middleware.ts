@@ -46,10 +46,10 @@ export default function createMiddleware(): Middleware {
 
       // 处理 effects
       if (typeof effects[action.type] === 'function') {
-        effectResult = effects[action.type](action.data, store.getState)
+        effectResult = effects[action.type](action.data, getState)
       }
 
-      hooks.forEach((hook) => hook(action, store.getState))
+      hooks.forEach((hook) => hook(action, getState))
 
       return effectResult || result
     }

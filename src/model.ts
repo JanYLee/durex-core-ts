@@ -38,6 +38,10 @@ export default function model(modelObj: Model): DurexModel {
 }
 
 function validateModel<T extends Model>(m: T): T {
+  if (!m) {
+    throw new Error('Model name must be a valid string!')
+  }
+
   const { name, reducers, effects } = m
 
   if (!name || typeof name !== 'string') {

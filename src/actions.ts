@@ -1,7 +1,7 @@
 import { setIn } from '@gem-mine/immutable'
 import { ReducersMapObject } from 'redux'
 
-import { store } from './middleware'
+import { store, getState } from './middleware'
 import { options } from './defaults'
 import { each } from './utils'
 import type { Actions, ActionCreator } from './@types/actions'
@@ -42,7 +42,7 @@ export function addActions(
   const scope = {
     actions: actions[modelName],
     setField: (data) => scope.actions.setField(data),
-    getState: () => store.getState()[modelName]
+    getState: () => getState()[modelName]
   }
 
   each(effects, (effectName) => {
@@ -75,7 +75,7 @@ export function resolveReducers(
       return reducers[cur].bind({
         setField: (d) => setIn(state, d),
         getState: () => state
-      })(data, store.getState)
+      })(data, getState)
     }
 
     return acc

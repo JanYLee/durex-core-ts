@@ -40,7 +40,9 @@ describe('the hook method', () => {
 
     durexModel.model({
       name: 'app',
-      initialState: 0,
+      state: {
+        count: 0
+      },
       reducers: {
         add(state, data) {
           return state + data
@@ -52,6 +54,8 @@ describe('the hook method', () => {
       }
     })
 
+    durexModel.createStore()
+
     durexModel.hook(fn)
 
     expect(fn).not.toBeCalled()
@@ -59,52 +63,5 @@ describe('the hook method', () => {
     actions.app.add(1)
 
     expect(fn).toBeCalled()
-  })
-
-  it('call function returned by hook should remove hook', () => {
-    const durexModel = require('../src/index')
-    const { actions } = durexModel
-
-    const log: string[] = []
-    let state
-
-    durexModel.model({
-      name: 'app',
-      initialState: 0,
-      reducers: {
-        add(_state, data) {
-          return _state + data
-        }
-      },
-      effects: {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        async myEffect() {}
-      }
-    })
-
-    const unhook = durexModel.hook((action, getState) => {
-      if (action.type === 'app/add') {
-        log.push('add')
-      }
-      if (action.type === 'app/myEffect') {
-        log.push('myEffect')
-      }
-      state = getState().app
-    })
-
-    actions.app.add(2)
-    actions.app.myEffect()
-
-    expect(log).toEqual(['add', 'myEffect'])
-    expect(state).toEqual(2)
-
-    // remove hook
-    unhook()
-
-    actions.app.add(10)
-    actions.app.myEffect()
-
-    expect(log).toEqual(['add', 'myEffect'])
-    expect(state).toEqual(2)
   })
 })

@@ -1,8 +1,4 @@
-import { actions, addActions } from '../src/actions'
-import createStore from '../src/store'
-import defaults from '../src/defaults'
-import durex, { model } from '../src/index'
-
+import { createStore } from 'redux';
 beforeEach(() => {
   jest.resetModules()
 })
@@ -12,23 +8,14 @@ jest.useFakeTimers()
 
 describe('global actions', () => {
   it('actions should be an empty object', () => {
-    expect(actions).toEqual({})
-  })
+    const durexModel = require('../src/index')
 
-  it('addActions should add action', () => {
-    addActions('app', {
-      add(state, data) {
-        return { ...state, count: state.count + data }
-      }
-    })
-
-    expect(actions.app).toBeInstanceOf(Object)
-    expect(actions.app.add).toBeInstanceOf(Function)
-    expect(actions.app.add.length).toBe(1)
+    expect(durexModel.actions).toEqual({})
   })
 
   it('mirror.model should add action', () => {
-    model({
+    const durexModel = require('../src/index')
+    durexModel.model({
       name: 'app1',
       state: {
         count: 0
@@ -40,14 +27,14 @@ describe('global actions', () => {
       }
     })
 
-    expect(actions.app1).toBeInstanceOf(Object)
-    expect(actions.app1.add).toBeInstanceOf(Function)
-    expect(actions.app1.add.length).toBe(1)
+    expect(durexModel.actions.app1).toBeInstanceOf(Object)
+    expect(durexModel.actions.app1.add).toBeInstanceOf(Function)
+    expect(durexModel.actions.app1.add.length).toBe(1)
   })
 
   it('throws if call actions without creating store', () => {
-    // eslint-disable-next-line global-require
-    model({
+    const durexModel = require('../src/index')
+    durexModel.model({
       name: 'app2',
       state: 0,
       reducers: {
@@ -58,37 +45,35 @@ describe('global actions', () => {
     })
 
     expect(() => {
-      actions.app2.add(1)
+      durexModel.actions.app2.add(1)
     }).toThrow(/You are calling "dispatch" or "getState" without applying middleware! Please create your store with middleware first/)
   })
 
   it('call actions should dispatch action', () => {
-    model({
+    const durexModel = require('../src/index')
+    durexModel.model({
       name: 'app3',
-      state: 0
-    })
-
-    defaults({
+      state: {
+        count: 0
+      },
       reducers: {
-        app3: {
-          add(state, data) {
-            return state + data
-          },
-          minus(state, data: any) {
-            return state - (data as number)
-          }
+        add(state, data) {
+          return state.count + data
+        },
+        minus(state, data) {
+          return state.count - data
         }
       }
     })
 
-    const store = createStore()
-    console.dir('-------')
-    console.dir(store, actions)
-    actions.app3.add(1)
-    expect(store.getState().app3).toEqual(1)
+    durexModel.createStore()
+    durexModel.actions.app3.add(1)
+    const store = durexModel.getState()
+    console.log('-------------', store, store.app3)
+    expect(store.app3.count).toEqual(1)
 
-    actions.app3.minus(1)
-    expect(store.getState().app3).toEqual(0)
+    durexModel.actions.app3.minus(1)
+    expect(store.app3.count).toEqual(0)
   })
 
   // it('should register to global effects object', () => {
